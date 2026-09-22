@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CHM_VERSION', '0.4.1' );
+define( 'CHM_VERSION', '0.4.2' );
 
 require_once get_template_directory() . '/inc/mark.php';
 require_once get_template_directory() . '/inc/data.php';

@@ -504,7 +504,7 @@
 
 .people {
   display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
 }
 
 /* Full-bleed portrait with the name laid over the top, which is the
@@ -540,14 +540,21 @@
   font-family: var(--font-display); font-size: 2.75rem; font-weight: 500;
   color: hsl(var(--deep-expertise) / .28);
 }
+/* Set to the left, not centred. Centred names on a column of cards
+   make every line a different length off a different axis, so the row
+   has no edge to read down; left-aligning gives the five one. */
 .person__label {
   position: absolute; inset-inline: 0; inset-block-start: 0;
-  padding: 1.1rem 0.9rem 2.5rem; text-align: center;
+  padding: 1.15rem 1.1rem 2.75rem; text-align: start;
   background: linear-gradient(to bottom, hsl(196 66% 14% / .55), transparent);
   color: #fff;
 }
-.person__label h3 { font-family: var(--font-sans); font-size: var(--t-body-s); font-weight: 500; color: #fff; }
-.person__label p { margin-top: 0.2rem; font-size: 0.75rem; line-height: 1.35; color: hsl(0 0% 100% / .78); }
+.person__label h3 {
+  font-family: var(--font-sans); font-size: 1.0625rem; font-weight: 500;
+  line-height: 1.25; letter-spacing: -0.01em; color: #fff;
+  text-wrap: balance;
+}
+.person__label p { margin-top: 0.35rem; font-size: 0.8125rem; line-height: 1.4; color: hsl(0 0% 100% / .8); }
 
 /* ── podcast network ───────────────────────────────────────────── */
 
