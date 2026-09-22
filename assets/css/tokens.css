@@ -1,0 +1,344 @@
+:root {
+  /* ── CHM brand revision v2 ─────────────────────────────────────
+     Straight from the brand guide's colour spec, with the usage
+     ratios it sets: Base White ~70% of screen, Precision Ink ~15%,
+     Knowledge Blue ~8%, Deep Expertise ~5%, Amber ~2%. The ratios are
+     what keep the accent an accent.
+     ──────────────────────────────────────────────────────────── */
+  --base-white: 220 30% 96%;      /* #F2F4F8  ground */
+  --precision-ink: 208 28% 18%;   /* #22303C  text */
+  --knowledge-blue: 193 63% 49%;  /* #2FA9CC  signature */
+  --deep-expertise: 196 66% 23%;  /* #144C60  anchor */
+  --amber: 37 91% 55%;            /* #F5A524  accent */
+
+  /* Discovery Gray is a tint utility on light grounds only. It never
+     sits beside the logo, fills a brand card, or carries meaning. On
+     dark surfaces the tints derive from Deep Expertise instead. */
+  --gray: 216 15% 54%;
+
+  /* The closing band's slate. Read off the prototype by eye, the
+     canvas cannot be sampled, and noticeably greyer than Deep
+     Expertise, which the brand guide otherwise assigns to dark
+     surfaces. Swap it if the real value turns up. */
+  --slate: 213 14% 38%;
+
+  --success: 154 46% 33%;         /* #2E7D5B */
+  --warning: 39 62% 46%;          /* #C08A2E */
+  --destructive: 4 65% 53%;       /* #D5453B */
+  --info: 193 63% 49%;            /* #2FA9CC */
+
+  /* Disease states keep the seven hues Seth signed off. They tint the
+     cluster cards only and sit outside the five-colour brand core. */
+  --cerebral-pink: 304 100% 81%;
+  --cerebral-cyan: 188 100% 50%;
+  --cerebral-amber: 40 100% 64%;
+  --cerebral-blue: 211 100% 50%;
+  --cerebral-green: 145 100% 72%;
+  --cerebral-purple: 254 100% 79%;
+  --cerebral-coral: 0 88% 80%;
+  --ink-pink: 314 72% 38%;
+  --ink-cyan: 191 100% 27%;
+  --ink-amber: 34 100% 28%;
+  --ink-green: 148 100% 21%;
+  --ink-purple: 259 55% 49%;
+  --ink-coral: 359 61% 43%;
+
+  /* ── semantic ─────────────────────────────────────────────── */
+  --background: var(--base-white);
+  --foreground: var(--precision-ink);
+  --card: 0 0% 100%;
+  --card-foreground: var(--precision-ink);
+  --surface: var(--deep-expertise);
+  --muted: 216 24% 92%;
+  --muted-foreground: 208 15% 42%;
+  --muted2: 208 15% 42%;
+  --faint: 216 15% 54%;
+  --border: 216 22% 89%;
+  --input: 216 22% 86%;
+  --ring: 193 63% 40%;
+
+  --primary: var(--knowledge-blue);
+  --primary-foreground: 0 0% 100%;
+  --primary-hover: 193 63% 42%;
+  --anchor: 193 63% 38%;
+  --accent: var(--amber);
+  --accent-foreground: 208 28% 18%;
+
+  --radius: 0.5rem;
+  --radius-card: 0.875rem;
+
+  --s-card: 0 1px 2px hsl(208 28% 18% / .04), 0 6px 18px -10px hsl(208 28% 18% / .16);
+  --s-card-hover: 0 2px 6px hsl(208 28% 18% / .06), 0 14px 32px -14px hsl(208 28% 18% / .22);
+  --s-pop: 0 6px 14px hsl(208 28% 18% / .08), 0 24px 48px -18px hsl(208 28% 18% / .26);
+
+  --t-hero: 4.25rem;
+  --t-display-l: 3rem;
+  --t-display-m: 2.25rem;
+  --t-display-s: 1.375rem;
+  --t-body-l: 1.125rem;
+  --t-body-m: 1rem;
+  --t-body-s: 0.875rem;
+  --t-meta: 0.75rem;
+
+  /* Chillax is the display face across the brand; Geist carries body
+     and Geist Mono the data. */
+  --font-display: Chillax, "Geist", system-ui, sans-serif;
+  --font-sans: Geist, system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono", Menlo, ui-monospace, monospace;
+
+  --rail: 78rem;
+  --gutter: 1.5rem;
+}
+
+@media (min-width: 52rem) {
+  :root { --gutter: 3rem; }
+}
+
+/* No dark appearance.
+   The brand guide specifies a light system with a dark anchor
+   (Deep Expertise as a surface), not a dark theme, and the block
+   that used to sit here still carried the pre-reskin palette, so a
+   dark-OS visitor was served the old blue primary and magenta accent
+   on near-black. Light only, at every appearance.
+   Reinstating dark means deriving it from the guide, not reviving
+   these values. */
+
+/* ── base ──────────────────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font: 400 var(--t-body-m)/1.6 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--t-hero); letter-spacing: -0.032em; line-height: 1.02; }
+h2 { font-size: var(--t-display-m); }
+h3 { font-size: var(--t-display-s); letter-spacing: -0.018em; line-height: 1.2; }
+
+p { margin: 0; text-wrap: pretty; }
+
+a { color: inherit; text-decoration: none; }
+
+img { max-width: 100%; height: auto; display: block; }
+
+ul { margin: 0; padding: 0; list-style: none; }
+
+/* One visible focus treatment for the whole site. The app used the
+   ring token for this and keyboard users depend on it, so it is not
+   optional in the port. */
+:where(a, button, summary, [tabindex]):focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+
+/* ── shared primitives ─────────────────────────────────────────── */
+
+.rail {
+  width: 100%;
+  max-width: var(--rail);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  /* muted-foreground rather than a lighter grey: this clears AA on
+     the card surface as well as on white, which the old #8b8680 in
+     the prototype did not (3.61:1). */
+  color: hsl(var(--muted-foreground));
+}
+
+.display { font-weight: 450; letter-spacing: -0.025em; }
+
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.lede {
+  color: hsl(var(--muted-foreground));
+  font-size: var(--t-body-l);
+  max-width: 64ch;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+/* Visually hidden but still laid out, so a canvas can sit on top of
+   real content without that content leaving the accessibility tree
+   or the crawler's view. display:none would remove both. */
+.behind-canvas {
+  position: absolute; inset: 0;
+  opacity: 0; pointer-events: none;
+}
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 36px; padding-inline: 1rem;
+  border: 0; border-radius: var(--radius);
+  font: 400 var(--t-body-s)/1 var(--font-sans);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.btn-primary {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+.btn-primary:hover { background: hsl(var(--primary-hover)); }
+
+.btn-quiet {
+  background: transparent;
+  color: hsl(var(--foreground));
+}
+.btn-quiet:hover { color: hsl(var(--muted-foreground)); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── bridge: names the rest of the public pages reach for ────────
+   The app's index.css declares 115 tokens; this file rebuilt 60 of
+   them from the brand guide. The other 55 are names its components
+   use, a `--color-*` layer of ready-to-use colours, a motion set,
+   and per-disease aliases.
+
+   They are mapped to the NEW brand values on purpose. Copying the
+   app's definitions across would quietly reinstate the pre-reskin
+   palette the way the dark block did, one component at a time.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* colours, pre-resolved. The raw triplets above stay the source of
+     truth; these exist so a component can write `var(--color-text)`
+     instead of `hsl(var(--foreground))`. */
+  --color-ground: hsl(var(--background));
+  --color-app-ground: hsl(var(--background));
+  --color-surface: hsl(var(--card));
+  --color-surface-2: hsl(var(--muted));
+  --color-wash: hsl(var(--muted) / .55);
+  --color-text: hsl(var(--foreground));
+  --color-text-primary: hsl(var(--foreground));
+  --color-text-secondary: hsl(var(--muted-foreground));
+  --color-text-muted: hsl(var(--muted-foreground));
+  --color-dim: hsl(var(--muted-foreground));
+  --color-muted2: hsl(var(--muted2));
+  --color-faint: hsl(var(--faint));
+  --color-placeholder: hsl(var(--faint));
+  --color-inverse: #fff;
+  --color-on-bright: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-hairline: hsl(var(--foreground) / .08);
+  --color-hairline-strong: hsl(var(--foreground) / .16);
+
+  --color-signature: hsl(var(--knowledge-blue));
+  --color-anchor: hsl(var(--deep-expertise));
+  --color-cta: hsl(var(--primary));
+  --color-cta-deep: hsl(var(--primary-hover));
+  --color-accent: hsl(var(--accent));
+  --color-amber-ink: hsl(var(--ink-amber));
+  --color-beam: hsl(var(--knowledge-blue) / .28);
+  --color-glow: hsl(var(--knowledge-blue) / .14);
+
+  /* the seven disease hues, by area rather than by colour name */
+  --color-breast: hsl(var(--cerebral-pink));
+  --color-metabolic: hsl(var(--cerebral-coral));
+  --color-lung: hsl(var(--cerebral-cyan));
+  --color-heme: hsl(var(--cerebral-green));
+  --color-gi: hsl(var(--cerebral-amber));
+  --color-gu: hsl(var(--cerebral-blue));
+  --color-gyn: hsl(var(--cerebral-purple));
+
+  --color-pink: hsl(var(--cerebral-pink));
+  --color-coral: hsl(var(--cerebral-coral));
+  --color-cyan: hsl(var(--cerebral-cyan));
+  --color-blue: hsl(var(--cerebral-blue));
+  --color-blue-deep: hsl(var(--deep-expertise));
+  --color-purple: hsl(var(--cerebral-purple));
+
+  /* raw aliases the app uses without the --color- prefix */
+  --ground: var(--background);
+  --text: var(--foreground);
+  --surface-1: var(--card);
+  --surface-2: var(--muted);
+  --dim: var(--muted-foreground);
+  --signature: var(--knowledge-blue);
+  --cta: var(--primary);
+  --cta-deep: var(--primary-hover);
+  --accent-hover: 37 91% 48%;
+  --inverse: 0 0% 100%;
+  --on-bright: var(--precision-ink);
+  --placeholder: var(--faint);
+  --hairline: var(--foreground) / 0.08;
+  --hairline-strong: var(--foreground) / 0.16;
+  --destructive-foreground: 0 0% 100%;
+
+  /* motion. Entering and exiting elements get ease-out; anything
+     moving on screen gets ease-in-out. Nothing here runs past 300ms,
+     which is the ceiling for UI. */
+  --dur-press: 120ms;
+  --dur-hover: 150ms;
+  --dur-transform: 220ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-soft: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out-strong: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-cross: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* shape and shadow aliases */
+  --radius-control: 6px;
+  --radius-surface: var(--radius-card);
+  --shadow-card: var(--s-card);
+  --shadow-card-hover: var(--s-card-hover);
+  --shadow-pop: var(--s-pop);
+  --s-nav: 0 1px 0 hsl(var(--foreground) / .06);
+  --shadow-nav: var(--s-nav);
+  --ring-img: inset 0 0 0 1px hsl(var(--foreground) / .06);
+
+  --rail-pad: var(--gutter);
+  --page-gutter: var(--gutter);
+
+  --app-ground: var(--background);
+  --wash: var(--muted);
+  --amber-ink: var(--ink-amber);
+  --amber-on-deep: 37 91% 62%;
+  --cerebral-blue-deep: var(--deep-expertise);
+  --cerebral-on-bright: var(--precision-ink);
+  --chm-metabolic: var(--cerebral-coral);
+  --color-metabolic-mix: hsl(var(--cerebral-coral) / .5);
+}
+
+/* --tw-ring-color and --tw-shadow-color are Tailwind internals. This
+   theme has no Tailwind, so they are absent on purpose: a component
+   that needs them is carrying a Tailwind utility that has to be
+   rewritten as plain CSS during the port, and a silent fallback here
+   would hide that. */
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-press: 1ms; --dur-hover: 1ms; --dur-transform: 1ms; }
+}

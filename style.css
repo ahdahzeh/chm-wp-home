@@ -1,0 +1,16 @@
+/*
+Theme Name: CHM Homepage
+Theme URI: https://communityhealth.media
+Author: Cerebral Design Group
+Description: Homepage and design system for Community Health Media, ported from the CHT platform's shipped tokens. Renders the public homepage server-side from the existing WordPress posts.
+Version: 0.3.0
+Requires at least: 6.4
+Tested up to: 6.7
+Requires PHP: 8.0
+License: Proprietary
+Text Domain: chm
+*/
+
+/* The real stylesheets are tokens.css and home.css, enqueued in
+   functions.php in that order. This file exists for the theme header
+   and is deliberately left empty below it. */

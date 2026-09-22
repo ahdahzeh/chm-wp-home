@@ -1,0 +1,1044 @@
+/* ─────────────────────────────────────────────────────────────────
+   Homepage, CHM New Brand Landing, frame "01 · Home v2, C · Gallery".
+
+   Section order and proportions follow that frame: hero → content
+   first → everything new → disease states → this moment → in
+   conversation → podcast network → get started → footer.
+
+   Measurements are the frame's own (1440 wide, 40px side gutter,
+   181px disease cards, 322×300 show cards, 104px KOL circles) made
+   fluid where a fixed pixel value would break below 1440.
+   ───────────────────────────────────────────────────────────────── */
+
+/* ── site chrome ───────────────────────────────────────────────── */
+
+.site-bar {
+  position: sticky; top: 0; z-index: 50;
+  background: hsl(var(--background) / .88);
+  backdrop-filter: saturate(1.6) blur(12px);
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.site-bar__in { display: flex; align-items: center; gap: 1.75rem; height: 64px; }
+/* font-size is still the control here: the lettering is sized in em
+   off it, so the lockup scales as one unit from a single number. */
+.site-bar__mark { font-size: 1.5rem; flex: none; }
+.site-bar__links { display: flex; align-items: center; gap: 1.75rem; }
+.site-bar__links a { font-size: var(--t-body-s); }
+.site-bar__links a:hover { color: hsl(var(--muted-foreground)); }
+.site-bar__right { margin-inline-start: auto; display: flex; align-items: center; gap: 1.25rem; }
+.site-bar__right .quiet-link { font-size: var(--t-body-s); }
+
+/* The prototype's nav ran 616px wide inside a 375px phone, which put
+   the CTA off-screen entirely. Below the fold-out width the links
+   move into a disclosure and only the mark and the CTA stay on the
+   bar, so the primary action is always reachable. */
+.site-bar__toggle { display: none; }
+
+@media (max-width: 60rem) {
+  .site-bar__links {
+    display: none;
+    position: absolute; inset-inline: 0; top: 64px;
+    flex-direction: column; align-items: stretch; gap: 0;
+    padding: 0.5rem var(--gutter) 1rem;
+    background: hsl(var(--background));
+    border-bottom: 1px solid hsl(var(--border));
+  }
+  .site-bar__links a { padding-block: 0.75rem; font-size: var(--t-body-m); }
+  .site-bar[data-open="true"] .site-bar__links { display: flex; }
+
+  .site-bar__toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; margin-inline-start: auto;
+    background: none; border: 0; cursor: pointer; color: inherit;
+  }
+  .site-bar__toggle + .site-bar__right { margin-inline-start: 0.5rem; }
+  .site-bar__right .quiet-link { display: none; }
+}
+
+/* ── hero ──────────────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  /* One viewport minus the bar, so the heading, the lede and the room
+     are all above the fold with nothing to scroll for. dvh rather than
+     vh because on iOS Safari the vh version measured past the browser
+     chrome. */
+  height: calc(100dvh - 64px);
+  min-height: 30rem;
+  max-height: 44rem;
+  overflow: hidden;
+  /* Nothing here claims a gesture: the room runs on its own and the
+     only pointer target is a link. */
+  touch-action: auto;
+}
+
+/* The room rises into the frame rather than being there already:
+   held 1.5s, then 1.9s on a decelerating curve, resting 64px high of
+   centre. */
+.hero__canvas {
+  position: absolute; inset: 0; z-index: 1;
+  display: block; width: 100%; height: 100%;
+  animation: hero-rise 1.9s cubic-bezier(0, 0, .2, 1) 1.5s backwards;
+}
+@keyframes hero-rise { from { transform: translateY(100%); } }
+
+/* The dot field sits behind the room and is faded through the middle
+   band, where the thumbnails are, so it reads as depth rather than
+   noise over the work. */
+.hero__field {
+  position: absolute; inset: 0; z-index: 0;
+  display: block; width: 100%; height: 100%;
+  opacity: .55;
+  -webkit-mask-image: linear-gradient(to bottom,
+    transparent 0%, #000 14%, #000 26%, rgb(0 0 0 / .12) 46%,
+    rgb(0 0 0 / .12) 72%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom,
+    transparent 0%, #000 14%, #000 26%, rgb(0 0 0 / .12) 46%,
+    rgb(0 0 0 / .12) 72%, #000 88%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Heading at the top, lede under the room. The hero is one viewport
+   tall, so the bottom block is still above the fold, which is what
+   stopped this working the first time round. */
+.hero__copy {
+  position: absolute; z-index: 4; inset-inline: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 0.9rem;
+  text-align: center; pointer-events: none;
+  padding-inline: var(--gutter);
+}
+.hero__copy--top { top: calc(clamp(1.25rem, 4%, 2.5rem) + 30px); }
+.hero__copy--bottom { bottom: calc(clamp(1.25rem, 4%, 2.5rem) + 20px); }
+
+/* Both steps up from the previous pass: the heading by 15%, the lede
+   by 20%. The room grew with them so the middle band is filled rather
+   than left as a gap. */
+.hero__copy h1 {
+  /* Wide enough for "Medicine moves through" to hold one line, so the
+     explicit break gives two lines rather than three. */
+  font-size: clamp(2.925rem, 6.35vw, 5.52rem);
+  line-height: 1.02; letter-spacing: -0.035em;
+  max-width: 26ch;
+}
+.hero__copy p {
+  color: hsl(var(--muted-foreground));
+  font-size: clamp(1.0125rem, 1.296vw, 1.215rem);
+  max-width: 56ch;
+}
+
+/* The real gallery content: a list of links so crawlers and screen
+   readers get every title, and so the works are reachable by
+   keyboard. The canvas is decoration drawn on top of it. */
+.hero__works { position: absolute; inset: 0; z-index: 2; }
+.hero__works li { position: absolute; inset: 0; }
+
+/* With the canvas live, hero.js parks each anchor over the piece it
+   belongs to every frame and the contents are hidden. The box stays,
+   so clicking a moving work opens that work, and the link keeps its
+   text for screen readers, which opacity:0 preserves and
+   display:none would not. */
+.hero[data-gl="on"] .hero__works li { position: static; }
+.hero[data-gl="on"] .hero__works li > a { position: absolute; display: block; cursor: pointer; }
+.hero[data-gl="on"] .hero__works li > a > * { opacity: 0; }
+.hero[data-gl="on"] .hero__works li > a:focus-visible {
+  outline: 2px solid hsl(var(--ring)); outline-offset: 4px; border-radius: var(--radius);
+}
+
+/* With no WebGL the same list becomes an ordinary grid, so the hero
+   degrades into a usable index rather than a blank screen. */
+.hero[data-gl="off"] { height: auto; max-height: none; padding-block: 3rem 4rem; }
+.hero[data-gl="off"] .hero__canvas,
+.hero[data-gl="off"] .hero__field { display: none; }
+.hero[data-gl="off"] .hero__copy { position: static; padding: 0; }
+.hero[data-gl="off"] .hero__works {
+  position: static; display: grid; gap: 1.5rem; margin-top: 2.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+.hero[data-gl="off"] .hero__works li { position: static; }
+
+.work-card img { border-radius: var(--radius); background: hsl(var(--card)); }
+.work-card h3 { margin-top: 0.75rem; font-size: var(--t-body-m); }
+.work-card .eyebrow { margin-top: 0.35rem; display: block; }
+
+/* ── band and section head ─────────────────────────────────────── */
+
+.band { padding-block: 0 clamp(2.5rem, 5vw, 3.5rem); }
+.band:first-of-type { padding-block-start: clamp(2rem, 4vw, 3rem); }
+
+.band__head {
+  display: grid; gap: 0.9rem;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  margin-bottom: 1.75rem;
+}
+.band__head h2 { grid-column: 1; font-size: clamp(1.4rem, 2.2vw, 1.75rem); }
+.band__head p {
+  grid-column: 1; max-width: 52ch;
+  color: hsl(var(--muted-foreground)); font-size: var(--t-body-s);
+}
+.band__head .band__action { grid-column: 2; grid-row: 1 / span 2; }
+
+.band__action {
+  display: inline-flex; align-items: center; height: 42px; padding-inline: 1.1rem;
+  border-radius: var(--radius); background: hsl(var(--card));
+  font-size: var(--t-body-s); color: hsl(var(--foreground)); white-space: nowrap;
+  transition: background-color 150ms ease;
+}
+.band__action:hover { background: hsl(var(--muted)); }
+
+/* ── content first: the bento ──────────────────────────────────────
+   Ported from the app's FormatBento. Twelve columns, not three: row
+   one is 4+4+4, row two splits 7+5 so the Live card stops short of the
+   format cards' right edge instead of running the full two-thirds.
+   Heights are fixed, so one card's content cannot set every sibling's.
+   ───────────────────────────────────────────────────────────────── */
+
+.bento { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+
+@media (min-width: 46rem) {
+  .bento { grid-template-columns: repeat(12, 1fr); }
+  .bento__card { grid-column: span 4; }
+  .bento__card--live { grid-column: span 7; }
+  .bento__card--hcp { grid-column: span 5; }
+}
+
+.bento__card {
+  display: flex; flex-direction: column; overflow: hidden;
+  padding: 1rem; border-radius: var(--radius-card);
+  background: hsl(var(--card));
+  height: 21.25rem;
+  transition: transform 200ms cubic-bezier(.23, 1, .32, 1), box-shadow 200ms ease;
+}
+.bento__card--live, .bento__card--hcp { height: 15rem; }
+.bento__card:hover { transform: translateY(-2px); box-shadow: var(--s-card-hover); }
+.bento__card:active { transform: scale(.995); }
+
+.bento__head { display: flex; align-items: center; justify-content: space-between; }
+.bento__head .eyebrow { color: hsl(var(--faint)); }
+.bento__head .eyebrow--accent { color: hsl(var(--knowledge-blue)); }
+.bento__meta {
+  font-family: var(--font-mono); font-size: var(--t-meta);
+  color: hsl(var(--faint)); font-variant-numeric: tabular-nums;
+}
+
+/* min-height:0 so the media can actually shrink inside a flex column
+   instead of forcing the card taller than its fixed height. */
+.bento__media { margin-block: 0.75rem; min-height: 0; flex: 1; overflow: hidden; }
+
+.bento__card h3 { font-size: var(--t-body-m); font-weight: 450; letter-spacing: -0.01em; }
+.bento__card > div:last-child p { margin-top: 0.25rem; font-size: var(--t-body-s); color: hsl(var(--muted2)); }
+
+/* video: poster over its chapter list */
+.bento__stack { display: flex; flex-direction: column; height: 100%; }
+.bento__stack img {
+  width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+  border-radius: 10px; background: hsl(var(--background));
+}
+.chapters { margin-top: 0.75rem; min-height: 0; flex: 1; overflow: hidden; }
+.chapters li { display: flex; align-items: center; gap: 0.75rem; padding-block: 0.25rem; }
+.chapters .t {
+  font-family: var(--font-mono); font-size: var(--t-meta);
+  width: 2.75rem; flex: none; color: hsl(var(--knowledge-blue));
+  font-variant-numeric: tabular-nums;
+}
+.chapters .l {
+  font-size: 0.8125rem; color: hsl(var(--muted2));
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* podcast: the audio cut, running continuously. Gating it on hover was
+   wrong twice over, a touch screen never hovers, and the point of the
+   row is seeing all three formats at rest. */
+.bento__wave { display: block; width: 100%; height: 100%; }
+
+/* editorial: the written cut drifting under a fade at both edges */
+.bento__drift {
+  position: relative; height: 100%; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 76%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 76%, transparent);
+}
+.bento__drift div { animation: editorial-drift 22s linear infinite; }
+.bento__drift p {
+  padding-bottom: 0.75rem; font-size: 0.8125rem;
+  line-height: 1.625; color: hsl(var(--muted2));
+}
+/* Two identical passes, so half the height is exactly one pass and the
+   loop never shows a seam. */
+@keyframes editorial-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, -50%, 0); }
+}
+
+/* live: the next session, dated */
+.bento__live { display: flex; height: 100%; align-items: center; gap: 1rem; }
+.bento__date {
+  display: grid; place-items: center; text-align: center;
+  width: 4rem; height: 4rem; flex: none; border-radius: 6px;
+  background: hsl(var(--deep-expertise)); color: #fff;
+}
+.bento__date .eyebrow { display: block; color: inherit; opacity: .8; }
+.bento__date b {
+  display: block; font-size: 1.25rem; font-weight: 450; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.bento__sessions { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+.bento__sessions li { display: flex; align-items: center; gap: 0.75rem; }
+.bento__sessions .s {
+  min-width: 0; flex: 1; font-size: 0.8125rem; color: hsl(var(--foreground) / .82);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.bento__sessions .w {
+  flex: none; font-family: var(--font-mono); font-size: var(--t-meta);
+  color: hsl(var(--faint)); font-variant-numeric: tabular-nums;
+}
+
+.bento__pipeline { display: block; width: 100%; height: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bento__drift div { animation: none; }
+  .bento__wave span { transition: none; }
+}
+
+/* ── everything new ────────────────────────────────────────────── */
+
+.chips {
+  display: inline-flex; gap: 0.25rem; padding: 0.3rem;
+  border-radius: 10px; background: hsl(var(--card));
+  margin-bottom: 1.75rem;
+}
+.chip {
+  appearance: none; border: 0; cursor: pointer;
+  height: 32px; padding-inline: 0.85rem; border-radius: 7px;
+  background: transparent; color: hsl(var(--muted-foreground));
+  font: 400 var(--t-body-s)/1 var(--font-sans);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.chip:hover { color: hsl(var(--foreground)); }
+.chip[aria-selected="true"] {
+  background: hsl(var(--background)); color: hsl(var(--foreground));
+  box-shadow: var(--s-card);
+}
+
+.card-grid {
+  display: grid; gap: 1.5rem 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+.card-grid[hidden] { display: none; }
+
+.post-card .shot { position: relative; display: block; }
+.post-card img {
+  aspect-ratio: 16 / 9; object-fit: cover; width: 100%;
+  border-radius: 10px; background: hsl(var(--muted));
+}
+/* The play affordance sits on the still, bottom right, so a card reads
+   as something to watch before you have read its title. */
+.post-card .play {
+  position: absolute; inset-block-end: 0.6rem; inset-inline-end: 0.6rem;
+  width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: hsl(var(--primary)); color: #fff;
+  box-shadow: var(--s-card);
+  transition: transform 180ms cubic-bezier(.23, 1, .32, 1);
+}
+.post-card .play svg { width: 10px; height: 10px; }
+.post-card:hover .play { transform: scale(1.08); }
+
+/* Tags carry a hue dot rather than a pill, so a row of them stays
+   quiet next to the titles. */
+.tags { display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; margin-top: 0.5rem; }
+.tags span { display: inline-flex; align-items: center; gap: 0.4rem; font-size: var(--t-body-s); color: hsl(var(--muted2)); }
+.tags span::before {
+  content: ""; width: 7px; height: 7px; border-radius: 50%;
+  background: hsl(var(--tag, var(--primary)));
+}
+.post-card .kind { margin-top: 0.6rem; display: block; font-family: var(--font-mono); font-size: var(--t-meta); color: hsl(var(--faint)); }
+.post-card h3 {
+  margin-top: 0.85rem; font-size: var(--t-body-m); font-weight: 400;
+  line-height: 1.4; letter-spacing: -0.01em;
+}
+.post-card:hover h3 { color: hsl(var(--primary)); }
+.post-card .eyebrow { margin-top: 0.5rem; display: block; text-transform: none; letter-spacing: 0.04em; }
+
+/* ── disease states ────────────────────────────────────────────────
+   The client's arrangement, exactly: the head sits in a left column
+   with no action button, a large ghosted mark behind it, and the cards
+   run as a four-column grid whose first row is inset by one column.
+   Only the card contents are ours, our anatomy drawings in place of
+   their line icons.
+   ───────────────────────────────────────────────────────────────── */
+
+.areas-band { position: relative; overflow: hidden; }
+
+.areas-grid { display: grid; gap: 2rem; align-items: start; }
+@media (min-width: 62rem) {
+  .areas-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 2.82fr); gap: 1.5rem; }
+}
+
+.areas-intro { position: relative; z-index: 1; }
+.areas-intro h2 { font-size: clamp(1.75rem, 2.9vw, 2.5rem); line-height: 1.12; }
+.areas-intro p { margin-top: 0.9rem; color: hsl(var(--muted2)); font-size: var(--t-body-s); }
+
+/* The mark, blown up and ghosted, sitting under the left column. It
+   fades out down its own height rather than sitting as a flat tint
+   the same treatment as the closing band's marks, and for the same
+   reason: a uniform silhouette reads as a shape stamped on the page,
+   a fading one reads as a watermark under it. */
+.areas-mark {
+  position: absolute; inset-block-end: -4rem; inset-inline-start: -3rem;
+  width: 26rem; color: hsl(var(--foreground) / .07);
+  pointer-events: none; z-index: 0;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgb(0 0 0 / .5) 48%, transparent 90%);
+  mask-image: linear-gradient(to bottom, #000 0%, rgb(0 0 0 / .5) 48%, transparent 90%);
+}
+.areas-mark svg { width: 100%; height: auto; }
+
+.areas {
+  display: grid; gap: 1.35rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 46rem) { .areas { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+/* The first row is inset by one column, which is what gives the block
+   its step and lets the heading breathe into the gap. */
+@media (min-width: 46rem) { .areas > li:first-child { grid-column-start: 2; } }
+
+/* Near-square, with the drawing at the top and the label sitting on
+   the floor of the card. The min-height is what holds that shape: a
+   card sized by its own content collapses to the label, and the seven
+   then step up and down the row by however long each subtitle runs. */
+.area {
+  display: flex; flex-direction: column; height: 100%;
+  min-height: 11.5rem;
+  padding: 1.25rem;
+  border-radius: 0.625rem;
+  background: hsl(var(--muted) / .55);
+  transition: background-color 180ms ease, transform 220ms cubic-bezier(.23, 1, .32, 1);
+}
+.area:hover { background: hsl(var(--muted) / .85); transform: translateY(-2px); }
+
+/* The drawing carries the hue; the well behind it stays neutral. The
+   SVG is used as a mask over a solid fill rather than drawn directly,
+   which is the only way to recolour artwork that ships its own ink. */
+/* White, not a darker grey: the well has to read as a plate the
+   drawing sits on. At 2.75rem the drawings were illegible; 4.5rem is
+   where the anatomy becomes the thing that tells you which area you
+   are looking at, and it keeps the card near-square rather than
+   tall. */
+.area__cluster {
+  position: relative; display: grid; place-items: center;
+  width: 4.5rem; height: 4.5rem; flex: none;
+  border-radius: 0.5rem; overflow: hidden;
+  background: #fff;
+}
+.area__art {
+  width: 86%; height: 86%;
+  background: hsl(var(--cluster-ink));
+  -webkit-mask: var(--art) center / contain no-repeat;
+  mask: var(--art) center / contain no-repeat;
+}
+.area__art--breast { --art: url(../img/breast.svg); }
+.area__art--weight-loss { --art: url(../img/weight-loss.svg); }
+.area__art--lung { --art: url(../img/lung.svg); }
+.area__art--hematology { --art: url(../img/hematology.svg); }
+.area__art--gi { --art: url(../img/gi.svg); }
+.area__art--gu { --art: url(../img/gu.svg); }
+.area__art--gynecology { --art: url(../img/gynecology.svg); }
+
+.area__body { display: block; margin-top: auto; padding-top: 1rem; }
+.area__body h3 { font-family: var(--font-sans); font-size: 1rem; font-weight: 500; }
+.area__body p { margin-top: 0.3rem; font-size: 0.8125rem; color: hsl(var(--muted2)); }
+
+/* ── this moment in medicine ───────────────────────────────────── */
+
+.moments { display: grid; gap: 1.35rem; grid-template-columns: 1fr; }
+@media (min-width: 62rem) { .moments { grid-template-columns: 1fr 1fr; } }
+
+/* A raised white card, as before. The flat grey version made four
+   cards read as one block; the lift is what separates them.
+
+   Colour does the differentiating: each card takes the hue of the
+   disease state it is filed under, the same hue that area owns in the
+   cluster grid and on its archive. It is information, not trim, which
+   is why it sits on the index numeral and the duration rather than in
+   a stripe down the side. A post with no area falls back to neutral. */
+.moment {
+  --moment-hue: var(--foreground);
+  --moment-ink: var(--muted-foreground);
+  position: relative; overflow: hidden;
+  display: grid; align-items: center; gap: 1.35rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  padding: 1.5rem;
+  border-radius: var(--radius-card); background: hsl(var(--card));
+  box-shadow: var(--s-card);
+  transition: transform var(--dur-transform) var(--ease-out-soft),
+              box-shadow var(--dur-transform) var(--ease-out-soft);
+}
+.moment:hover { transform: translateY(-2px); box-shadow: var(--s-card-hover); }
+@media (prefers-reduced-motion: reduce) {
+  .moment:hover { transform: none; }
+}
+.moment img {
+  width: 10rem; aspect-ratio: 16 / 9; object-fit: cover;
+  border-radius: 8px; background: hsl(var(--muted));
+}
+/* On a phone a 10rem still leaves under 100px for the title, which
+   clamps to two words. The thumbnail gives the width back. */
+@media (max-width: 30rem) {
+  .moment { padding: 1.1rem; gap: 1rem; }
+  .moment img { width: 7rem; }
+}
+/* The index as a watermark rather than a label: it orders the row
+   without taking a column of its own. */
+.moment__no {
+  position: absolute; inset-block-start: 50%; inset-inline-end: -0.6rem;
+  transform: translateY(-50%);
+  font-family: var(--font-display); font-size: 5.25rem; font-weight: 600;
+  line-height: 1; color: hsl(var(--moment-hue) / .3);
+  pointer-events: none; user-select: none;
+}
+.moment__dur {
+  display: inline-block; padding: 0.2rem 0.6rem; border-radius: 6px;
+  background: hsl(var(--moment-hue) / .18); font-family: var(--font-mono);
+  font-size: var(--t-meta); color: hsl(var(--moment-ink));
+  font-variant-numeric: tabular-nums;
+}
+/* Two lines, then an ellipsis. Session titles run long enough that an
+   unclamped third line would set the height of the whole row. */
+.moment h3 {
+  margin-top: 0.6rem;
+  font-family: var(--font-sans); font-size: var(--t-body-s);
+  font-weight: 400; line-height: 1.45;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* ── in conversation ───────────────────────────────────────────── */
+
+.people {
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+}
+
+/* Full-bleed portrait with the name laid over the top, which is the
+   client's treatment, it reads as a row of faces rather than a row of
+   cards with faces in them. */
+/* The depth comes from three layers, not one flat fill: a vertical
+   gradient from the anchor down to a pale wash, a ghosted mark sitting
+   in the upper third, and the portrait over both. */
+.person {
+  position: relative; display: block; overflow: hidden;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-card);
+  background: linear-gradient(to bottom,
+    hsl(var(--deep-expertise)) 0%,
+    hsl(196 45% 42%) 38%,
+    hsl(196 32% 68%) 72%,
+    hsl(200 28% 82%) 100%);
+  box-shadow: var(--s-card);
+  transition: transform 220ms cubic-bezier(.23, 1, .32, 1), box-shadow 220ms ease;
+}
+.person__ghost {
+  position: absolute; inset-block-start: 8%; inset-inline-start: 50%;
+  transform: translateX(-50%);
+  width: 64%; color: hsl(0 0% 100% / .1);
+  pointer-events: none;
+}
+.person__ghost svg { width: 100%; height: auto; }
+.person:hover { transform: translateY(-3px); box-shadow: var(--s-card-hover); }
+.person img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.person__mono {
+  position: absolute; inset-block-end: 12%; inset-inline: 0;
+  display: grid; place-items: center;
+  font-family: var(--font-display); font-size: 2.75rem; font-weight: 500;
+  color: hsl(var(--deep-expertise) / .28);
+}
+.person__label {
+  position: absolute; inset-inline: 0; inset-block-start: 0;
+  padding: 1.1rem 0.9rem 2.5rem; text-align: center;
+  background: linear-gradient(to bottom, hsl(196 66% 14% / .55), transparent);
+  color: #fff;
+}
+.person__label h3 { font-family: var(--font-sans); font-size: var(--t-body-s); font-weight: 500; color: #fff; }
+.person__label p { margin-top: 0.2rem; font-size: 0.75rem; line-height: 1.35; color: hsl(0 0% 100% / .78); }
+
+/* ── podcast network ───────────────────────────────────────────── */
+
+.shows { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+@media (min-width: 46rem) { .shows { grid-template-columns: 1fr 1fr; } }
+
+.show {
+  display: flex; flex-direction: column;
+  min-height: 300px; padding: 1.5rem;
+  border-radius: var(--radius-card);
+  background: hsl(var(--show, var(--deep-expertise))); color: #fff;
+  transition: transform 220ms cubic-bezier(.23, 1, .32, 1);
+}
+.show:hover { transform: translateY(-3px); }
+.show .eyebrow { color: hsl(0 0% 100% / .55); }
+.show h3 { margin-top: 0.85rem; font-size: 1.5rem; color: #fff; }
+.show__tagline { margin-top: auto; font-size: var(--t-body-s); color: hsl(0 0% 100% / .62); }
+
+.wave { display: flex; align-items: flex-end; gap: 4.8px; height: 52px; margin-block: 1.35rem; }
+.wave span {
+  flex: 1; border-radius: 3px; background: currentColor;
+  transform-origin: bottom;
+  animation: wave-pulse 1.9s ease-in-out infinite;
+}
+@keyframes wave-pulse { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.45); } }
+.show:hover .wave span { animation-duration: 1.1s; }
+
+.show__foot { display: flex; align-items: center; gap: 1rem; }
+.show__play {
+  width: 30px; height: 30px; border-radius: 50%; flex: none;
+  background: hsl(var(--knowledge-blue)); color: #fff;
+  display: grid; place-items: center;
+}
+.show__play svg { width: 11px; height: 11px; }
+.show__foot span { font-size: var(--t-body-s); }
+.show__foot .eyebrow { margin-inline-start: auto; }
+
+/* ── the closing band ──────────────────────────────────────────────
+   The CTA and the footer are one continuous slate band, divided by
+   rules rather than by colour. Building them as two bands with
+   different grounds was the thing that read wrong.
+   ───────────────────────────────────────────────────────────────── */
+
+.closing {
+  position: relative; overflow: hidden;
+  background: hsl(var(--slate)); color: hsl(0 0% 100% / .76);
+  margin-top: clamp(2rem, 5vw, 4rem);
+}
+
+/* Two large marks, ghosted, either side of the CTA only. */
+/* The marks fade out down their own height rather than sitting as a
+   flat tint, that gradient is most of why the band reads as lit from
+   the top rather than as a slab with shapes stamped on it. */
+.closing__mark {
+  position: absolute; height: 23rem; width: 23rem;
+  color: hsl(0 0% 100% / .085); pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgb(0 0 0 / .55) 45%, transparent 92%);
+  mask-image: linear-gradient(to bottom, #000 0%, rgb(0 0 0 / .55) 45%, transparent 92%);
+}
+/* Inverted, so the pair reads as one mark rotated rather than the
+   same mark printed twice. The rotation carries the fade mask with
+   it, so this one's gradient is authored upside down in order to
+   still run top-to-bottom on screen. */
+/* The pair sits at different heights, each cropped by a different
+   edge of the band. Flush-topped and level, they read as a repeated
+   tile; offset and cut, they read as one mark passing behind. */
+.closing__mark--l {
+  inset-block-start: -2.5rem;
+  inset-inline-start: -2.5rem;
+  transform: rotate(180deg);
+  -webkit-mask-image: linear-gradient(to top, #000 0%, rgb(0 0 0 / .55) 45%, transparent 92%);
+  mask-image: linear-gradient(to top, #000 0%, rgb(0 0 0 / .55) 45%, transparent 92%);
+}
+.closing__mark--r { inset-block-start: 3.5rem; inset-inline-end: -2.5rem; }
+.closing__mark svg { width: 100%; height: 100%; }
+
+.getstarted__in {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; align-items: center; gap: 0.9rem;
+  text-align: center;
+  /* Loosened from the pass that cut it: the space you circled was
+     dead because nothing occupied it. The marks fill it now, so it
+     reads as composition rather than a gap, but it stays well short
+     of the 92px it was. */
+  padding-block: clamp(2.5rem, 4.6vw, 3.75rem) clamp(1.75rem, 3.2vw, 2.6rem);
+}
+.getstarted__in h2 {
+  font-size: clamp(1.5rem, 2.9vw, 2.2rem);
+  letter-spacing: -0.035em;
+  color: #fff;
+}
+.getstarted__in p { color: hsl(0 0% 100% / .74); max-width: 72ch; font-size: var(--t-body-s); }
+.getstarted__actions { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-top: 0.6rem; }
+.getstarted__actions .btn { height: 40px; padding-inline: 1.15rem; gap: 0.5em; font-size: var(--t-body-s); }
+/* Outlined, not filled: two solid buttons side by side compete, and
+   the teal is supposed to be the one that gets pressed. */
+.btn-secondary {
+  background: transparent; color: #fff;
+  border: 1px solid hsl(0 0% 100% / .45);
+}
+.btn-secondary:hover { background: hsl(0 0% 100% / .12); border-color: hsl(0 0% 100% / .7); }
+
+/* ── footer, inside the same band ──────────────────────────────── */
+
+.site-foot { position: relative; z-index: 1; padding-block: 0 1.25rem; }
+.site-foot::before {
+  content: ""; display: block; height: 1px;
+  background: hsl(0 0% 100% / .14);
+  margin-block-end: 2.25rem;
+}
+
+/* One row at every width. Below the point where it fits, the footer
+   scrolls sideways rather than collapsing into a stack, the columns
+   stay legible as columns and the row running past the edge is the
+   cue that there is more. */
+.foot-top {
+  display: flex; align-items: stretch;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* bleed to the viewport edge, then pad back to the rail */
+  margin-inline: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+  scroll-padding-inline-start: var(--gutter);
+}
+.foot-top::-webkit-scrollbar { display: none; }
+
+.foot-about { flex: 0 0 20rem; padding-inline-end: 2rem; }
+@media (max-width: 40rem) { .foot-about { flex-basis: 16rem; } }
+
+.foot-about .site-bar__mark { display: inline-flex; margin-bottom: 1.1rem; color: #fff; font-size: 1.35rem; }
+.foot-about p { font-size: 0.8125rem; line-height: 1.6; max-width: 34ch; }
+.foot-about address { font-style: normal; margin-top: 1rem; font-size: 0.8125rem; line-height: 1.6; }
+.foot-about address a { color: inherit; }
+.foot-about address a:hover { color: #fff; }
+
+/* Outlined squares, not filled circles. */
+.socials { display: flex; gap: 0.5rem; margin-top: 1.5rem; }
+.socials a {
+  width: 30px; height: 30px; border-radius: 7px;
+  display: grid; place-items: center;
+  border: 1px solid hsl(0 0% 100% / .28); color: hsl(0 0% 100% / .82);
+  transition: border-color 150ms ease, color 150ms ease;
+}
+.socials a:hover { border-color: #fff; color: #fff; }
+.socials svg { width: 14px; height: 14px; }
+
+/* Space between the columns, not rules: at six columns the hairlines
+   read as a table, and the gap already groups them. */
+.foot-col {
+  flex: 0 0 auto; min-width: 9.5rem;
+  padding-inline-end: 3rem;
+}
+.foot-col h4 {
+  font-family: var(--font-sans); font-size: 0.8125rem; font-weight: 500;
+  color: #fff; margin-bottom: 1rem; white-space: nowrap;
+}
+.foot-col li + li { margin-top: 0.6rem; }
+.foot-col a { font-size: 0.8125rem; color: hsl(0 0% 100% / .68); white-space: nowrap; }
+.foot-col a:hover { color: #fff; }
+
+.foot-base {
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; align-items: center;
+  margin-top: 2.5rem; padding-top: 1.25rem;
+  border-top: 1px solid hsl(0 0% 100% / .14);
+  font-size: 0.75rem; color: hsl(0 0% 100% / .6);
+}
+.foot-base__mid { margin-inline: auto; }
+.foot-base__tag { margin-inline-start: auto; }
+.foot-base a:hover { color: #fff; }
+
+/* ── the mark ──────────────────────────────────────────────────────
+   The CHM chevron, not a generic arrow. It sits inside buttons at cap
+   height, beside the wordmark, and blown up as the ghosted graphic on
+   the anchor bands.
+   ───────────────────────────────────────────────────────────────── */
+.btn-mark { width: 0.72em; height: 0.72em; flex: none; margin-inline-start: 0.15em; }
+.band__action .btn-mark { margin-inline-start: 0.4em; }
+
+.site-bar__mark { display: inline-flex; align-items: center; gap: 0.45rem; }
+.wordmark-mark { width: 0.8em; height: 0.8em; flex: none; color: hsl(var(--knowledge-blue)); }
+
+/* 395x150 artwork. Height drives it and width follows the ratio, so
+   the tracking and weight are the wordmark's own and cannot drift
+   with a font fallback. */
+.wordmark-text { height: 0.72em; width: auto; flex: none; }
+.site-foot .wordmark-mark { color: hsl(var(--knowledge-blue)); }
+
+.getstarted__mark svg { width: 100%; height: 100%; }
+
+/* ── a section action centred under its content ──────────────────
+   Used where the row is the whole section and the link is its
+   conclusion rather than a shortcut past it. `.band--footaction`
+   drops the top-right slot so the head does not reserve a column for
+   an action that is not in it. */
+.band--footaction .band__head { grid-template-columns: 1fr; }
+.band__foot { display: flex; justify-content: center; margin-top: 2rem; }
+.band__foot .band__action {
+  border: 1px solid hsl(var(--border)); background: #fff;
+}
+.band__foot .band__action:hover { background: hsl(var(--muted)); }
+
+/* ── secondary pages ───────────────────────────────────────────────
+   Everything that is not the homepage: the library, a term archive,
+   search, a single session, and the static pages. They share one
+   shape, a header band over a grid or a column of prose, so they
+   share one set of rules rather than a stylesheet each.
+   ───────────────────────────────────────────────────────────────── */
+
+.page-head {
+  padding-block: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 2.6vw, 2.25rem);
+}
+.page-head h1 {
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  line-height: 1.08; letter-spacing: -0.03em;
+  max-width: 20ch; text-wrap: balance;
+}
+.page-head .eyebrow { margin-bottom: 0.65rem; }
+.page-head__lede {
+  margin-top: 0.9rem; max-width: 56ch;
+  color: hsl(var(--muted2)); font-size: var(--t-body-m);
+}
+.page-head__count {
+  margin-top: 0.9rem;
+  font-family: var(--font-mono); font-size: var(--t-meta);
+  color: hsl(var(--faint)); font-variant-numeric: tabular-nums;
+}
+
+/* Chips that are links rather than tab buttons. Same pill, but the
+   active one is marked with aria-current, which is what a filter that
+   changes the URL actually is. */
+.chips--links { margin-bottom: 1.75rem; flex-wrap: wrap; }
+.chips--links .chip { text-decoration: none; }
+.chips--links .chip[aria-current="page"] {
+  background: hsl(var(--foreground)); color: hsl(var(--background));
+}
+
+/* Names what is missing and offers a way on, rather than printing
+   "No results" and stopping. */
+.empty {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 1.25rem;
+  padding: clamp(2rem, 4vw, 3rem);
+  border-radius: 0.625rem; background: hsl(var(--muted) / .55);
+}
+.empty p { color: hsl(var(--muted2)); max-width: 46ch; }
+
+.searchbar { display: flex; gap: 0.6rem; margin-bottom: 2rem; max-width: 34rem; }
+.searchbar input {
+  flex: 1; min-width: 0; height: 42px; padding-inline: 0.9rem;
+  border: 1px solid hsl(var(--input)); border-radius: var(--radius);
+  background: hsl(var(--card)); color: hsl(var(--foreground));
+  font: inherit; font-size: var(--t-body-s);
+}
+.searchbar input::placeholder { color: hsl(var(--faint)); }
+.searchbar input:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 1px; }
+.searchbar .btn { height: 42px; padding-inline: 1.1rem; font-size: var(--t-body-s); }
+
+/* ── a single session ──────────────────────────────────────────── */
+
+.single { padding-block: clamp(2rem, 4vw, 3.25rem) 0; }
+/* The cap is in rem, not ch: `ch` on this wrapper resolves against
+   the inherited body size, not the h1's, so a ch value here caps a
+   2.6rem heading at body-text width. */
+.single__head { max-width: 42rem; }
+.single__head h1 {
+  margin-top: 0.6rem;
+  font-size: clamp(1.75rem, 3.4vw, 2.6rem);
+  line-height: 1.1; letter-spacing: -0.03em; text-wrap: balance;
+}
+.single__media {
+  margin-block: clamp(1.75rem, 3vw, 2.5rem);
+  border-radius: var(--radius-card); overflow: hidden;
+  background: hsl(var(--muted));
+}
+.single__media img { display: block; width: 100%; height: auto; }
+.single__tags { margin-top: 2rem; }
+
+/* ── prose ─────────────────────────────────────────────────────────
+   Editor output, so it has to survive whatever blocks are used. The
+   measure is capped here rather than on every child. */
+
+.prose { max-width: 68ch; padding-bottom: clamp(2.5rem, 5vw, 4rem); font-size: var(--t-body-m); line-height: 1.7; }
+.prose > * + * { margin-top: 1.1em; }
+.prose h2 { margin-top: 2.2em; font-size: 1.5rem; line-height: 1.2; letter-spacing: -0.02em; }
+.prose h3 { margin-top: 1.8em; font-size: 1.175rem; line-height: 1.3; }
+.prose h2 + *, .prose h3 + * { margin-top: 0.6em; }
+.prose a { color: hsl(var(--primary)); text-decoration: underline; text-underline-offset: 2px; }
+.prose a:hover { color: hsl(var(--primary-hover)); }
+.prose ul, .prose ol { padding-inline-start: 1.3em; }
+.prose li + li { margin-top: 0.4em; }
+.prose ul { list-style: disc; }
+.prose ol { list-style: decimal; }
+.prose img, .prose figure { border-radius: var(--radius); max-width: 100%; height: auto; }
+.prose blockquote {
+  padding-inline-start: 1.2em;
+  border-inline-start: 2px solid hsl(var(--primary));
+  color: hsl(var(--muted2));
+}
+.prose code {
+  padding: 0.15em 0.4em; border-radius: 4px;
+  background: hsl(var(--muted)); font-family: var(--font-mono); font-size: 0.875em;
+}
+.prose pre { padding: 1rem; border-radius: var(--radius); background: hsl(var(--muted)); overflow-x: auto; }
+.prose pre code { padding: 0; background: none; }
+.prose table { width: 100%; border-collapse: collapse; font-size: var(--t-body-s); }
+.prose th, .prose td { padding: 0.6rem 0.8rem; border-bottom: 1px solid hsl(var(--border)); text-align: start; }
+.prose th { font-weight: 500; }
+/* Wide content gets its own scroller so the page never moves sideways. */
+.prose .wp-block-table { overflow-x: auto; }
+
+/* ── pagination ────────────────────────────────────────────────── */
+
+.pagination { display: flex; justify-content: center; padding-block: clamp(2rem, 4vw, 3rem); }
+.pagination .nav-links { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.pagination a, .pagination .current, .pagination .dots {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 38px; height: 38px; padding-inline: 0.7rem;
+  border-radius: var(--radius);
+  font-size: var(--t-body-s); font-variant-numeric: tabular-nums;
+}
+.pagination a { background: hsl(var(--muted) / .55); }
+.pagination a:hover { background: hsl(var(--muted)); }
+.pagination .current { background: hsl(var(--foreground)); color: hsl(var(--background)); }
+.pagination .dots { color: hsl(var(--faint)); }
+
+/* ── podcast network hub ───────────────────────────────────────── */
+
+.network__actions { justify-content: flex-start; margin-bottom: 0.5rem; }
+.network__actions .btn { height: 42px; padding-inline: 1.15rem; gap: 0.5em; font-size: var(--t-body-s); }
+
+/* The outline button on a light ground, as against the ghost the
+   closing band uses on slate. */
+.btn-outline {
+  background: transparent; color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+}
+.btn-outline:hover { background: hsl(var(--muted) / .6); border-color: hsl(var(--input)); }
+
+/* The homepage's show card is one link; here the card carries two
+   destinations, so it is a div with its own links rather than an <a>
+   with anchors nested inside it, which is invalid. */
+.show--static { cursor: default; }
+.show__title { color: inherit; }
+.show__title:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.show__foot { flex-wrap: wrap; gap: 0.75rem 1rem; }
+.show__cta {
+  display: inline-flex; align-items: center; gap: 0.45em;
+  height: 34px; padding-inline: 0.85rem; border-radius: 6px;
+  background: #fff; color: hsl(var(--slate));
+  font-size: var(--t-body-s);
+}
+.show__cta:hover { background: hsl(0 0% 100% / .88); }
+.show__listen {
+  display: inline-flex; align-items: center; height: 34px;
+  padding-inline: 0.85rem; border-radius: 6px;
+  border: 1px solid hsl(0 0% 100% / .38);
+  color: #fff; font-size: var(--t-body-s);
+}
+.show__listen:hover { background: hsl(0 0% 100% / .12); }
+
+.platforms { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.platforms a {
+  display: inline-flex; align-items: center; height: 40px;
+  padding-inline: 1rem; border-radius: 6px;
+  background: hsl(var(--card)); box-shadow: var(--s-card);
+  color: hsl(var(--muted-foreground)); font-size: var(--t-body-s);
+  transition: color var(--dur-hover) var(--ease-out-soft),
+              box-shadow var(--dur-hover) var(--ease-out-soft);
+}
+.platforms a:hover { color: hsl(var(--foreground)); box-shadow: var(--s-card-hover); }
+.platforms a:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+
+.network__platforms { border-top: 1px solid hsl(var(--border)); padding-top: clamp(2rem, 4vw, 3rem); }
+
+/* ── podcast network hero ──────────────────────────────────────────
+   The covers carry it. Four of them fanned reads as a network in a
+   way a headline alone does not, and they are what a listener
+   actually recognises.
+
+   The drift is a long, slow float on each card with a staggered
+   delay, not a slide: ambient motion that never asks to be watched.
+   Nothing here moves more than a few pixels, and the whole thing
+   stops under prefers-reduced-motion.
+   ───────────────────────────────────────────────────────────────── */
+
+.pod-hero { position: relative; overflow: hidden; }
+
+/* A single soft wash of the signature colour behind the stack, so the
+   covers sit on something rather than floating on flat page. */
+.pod-hero__glow {
+  position: absolute; inset-block-start: -18%; inset-inline-end: -8%;
+  width: min(46rem, 72%); aspect-ratio: 1;
+  background: radial-gradient(circle at 50% 50%,
+    hsl(var(--knowledge-blue) / .17), hsl(var(--knowledge-blue) / 0) 68%);
+  pointer-events: none;
+}
+
+.pod-hero__in {
+  position: relative; z-index: 1;
+  display: grid; gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+  padding-block: clamp(2.75rem, 5.5vw, 4.75rem);
+}
+@media (min-width: 60rem) {
+  .pod-hero__in { grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr); }
+}
+
+.pod-hero__copy h1 {
+  margin-top: 0.7rem;
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  line-height: 1.04; letter-spacing: -0.032em;
+  max-width: 16ch; text-wrap: balance;
+}
+.pod-hero__lede {
+  margin-top: 1.1rem; max-width: 50ch;
+  color: hsl(var(--muted2)); font-size: var(--t-body-l); line-height: 1.6;
+}
+.pod-hero .network__actions { margin-top: 1.9rem; }
+
+/* ── the fan ───────────────────────────────────────────────────── */
+
+.pod-fan {
+  position: relative;
+  display: grid; place-items: center;
+  min-height: clamp(17rem, 32vw, 24rem);
+  list-style: none; margin: 0; padding: 0;
+}
+.pod-fan li {
+  position: absolute;
+  width: clamp(8.5rem, 15.5vw, 12.5rem);
+  aspect-ratio: 1;
+  border-radius: 0.875rem;
+  overflow: hidden;
+  box-shadow: 0 2px 6px hsl(208 28% 18% / .10), 0 22px 48px -18px hsl(208 28% 18% / .38);
+  /* The four sit on an arc: each step out is also a step down and a
+     few degrees round, which is what makes it read as a fan rather
+     than a stack of four squares. */
+  --step: calc(var(--i) - 1.5);
+  /* The spread is about half a cover wide. Tighter than that and only
+     the front one reads, which defeats the point of showing four. */
+  transform:
+    translateX(calc(var(--step) * clamp(3.1rem, 7.6vw, 6.2rem)))
+    translateY(calc(abs(var(--step)) * 0.6rem))
+    rotate(calc(var(--step) * 5deg));
+  z-index: calc(10 - var(--i));
+  animation: pod-float 9s var(--ease-standard) infinite;
+  animation-delay: calc(var(--i) * -2.25s);
+}
+.pod-fan img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* Six pixels of travel. Enough to read as alive, not enough to
+   distract from the copy beside it. */
+@keyframes pod-float {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -6px; }
+}
+
+/* Safari does not support abs() in every build; the fallback drops the
+   vertical arc and keeps the spread and rotation. */
+@supports not (width: abs(1px)) {
+  .pod-fan li {
+    transform:
+      translateX(calc(var(--step) * clamp(3.1rem, 7.6vw, 6.2rem)))
+      rotate(calc(var(--step) * 5deg));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pod-fan li { animation: none; }
+}
+
+/* On a phone the fan would run off both edges, so it tightens and the
+   two outer covers step behind rather than beside. */
+@media (max-width: 40rem) {
+  .pod-fan li {
+    width: clamp(8rem, 38vw, 10.5rem);
+    transform:
+      translateX(calc(var(--step) * 2.3rem))
+      rotate(calc(var(--step) * 4deg));
+  }
+}
