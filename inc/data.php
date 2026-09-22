@@ -246,11 +246,13 @@ function chm_default_nav() {
 		array( '/catalog', __( 'Disease states', 'chm' ) ),
 	);
 
+	echo '<ul class="site-bar__menu">';
 	foreach ( $items as $item ) {
 		printf(
-			'<a href="%s">%s</a>',
+			'<li><a href="%s">%s</a></li>',
 			esc_url( home_url( $item[0] ) ),
 			esc_html( $item[1] )
 		);
 	}
+	echo '</ul>';
 }

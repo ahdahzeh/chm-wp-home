@@ -33,16 +33,19 @@
 			</svg>
 		</button>
 
-		<?php /* No <ul>/<li>: the bar lays the links out with flex, and a
-		         list wrapper would fight the gap. With no menu assigned,
-		         the five default destinations render instead of nothing. */ ?>
+		<?php /* The <ul> has to stay. Dropping it with items_wrap left the
+		         <li> elements orphaned inside the <nav>, which is invalid
+		         and which browsers render with list markers, so every page
+		         carried a row of bullets between the nav items. The list
+		         is kept and laid out with flex instead. */ ?>
 		<nav class="site-bar__links" id="site-nav" aria-label="<?php esc_attr_e( 'Primary', 'chm' ); ?>">
 			<?php
 			wp_nav_menu(
 				array(
 					'theme_location' => 'primary',
 					'container'      => false,
-					'items_wrap'     => '%3$s',
+					'items_wrap'     => '<ul id="%1$s" class="%2$s site-bar__menu">%3$s</ul>',
+					'menu_class'     => 'site-bar__menu',
 					'depth'          => 1,
 					'fallback_cb'    => 'chm_default_nav',
 				)

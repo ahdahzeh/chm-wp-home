@@ -24,6 +24,18 @@
    off it, so the lockup scales as one unit from a single number. */
 .site-bar__mark { font-size: 1.5rem; flex: none; }
 .site-bar__links { display: flex; align-items: center; gap: 1.75rem; }
+/* wp_nav_menu returns a real <ul>; it lays out as a row and loses the
+   markers here rather than by having the list stripped out of the
+   markup, which is what produced the bullets. */
+.site-bar__menu {
+  display: flex; align-items: center; gap: 1.75rem;
+  list-style: none; margin: 0; padding: 0;
+}
+.site-bar__menu li { margin: 0; }
+.site-bar__menu a { font-size: var(--t-body-s); white-space: nowrap; }
+.site-bar__menu a:hover { color: hsl(var(--muted-foreground)); }
+.site-bar__menu .current-menu-item > a,
+.site-bar__menu [aria-current="page"] { color: hsl(var(--primary)); }
 .site-bar__links a { font-size: var(--t-body-s); }
 .site-bar__links a:hover { color: hsl(var(--muted-foreground)); }
 .site-bar__right { margin-inline-start: auto; display: flex; align-items: center; gap: 1.25rem; }
@@ -1120,3 +1132,46 @@
   .netshow { grid-template-columns: 1fr; }
   .netshow__art { width: 5rem; }
 }
+
+/* ── legacy content blocks ─────────────────────────────────────────
+   Some posts carry a self-contained custom HTML block with its own
+   <style> and its own hardcoded palette, pasted in before this theme
+   existed. That style sits in the body, after this stylesheet, so it
+   wins on source order. It does not win on specificity: the block
+   sets its custom properties on `.chm-expertise`, and one extra
+   class is enough to take them back.
+
+   This remaps the block onto brand tokens rather than restyling it,
+   so the block keeps its own layout and only its colour changes. The
+   real fix is editing the post and deleting the embedded CSS, which
+   needs wp-admin.
+   ───────────────────────────────────────────────────────────────── */
+
+.prose .chm-expertise {
+  --accent: hsl(var(--deep-expertise));   /* was #7b1fa2, Material purple */
+  --icon-bg: hsl(var(--knowledge-blue));  /* was #159ad6, near but not the brand blue */
+  --border: hsl(var(--border));
+  --text: hsl(var(--foreground));
+  --muted: hsl(var(--muted-foreground));
+}
+/* 800 weight uppercase is not how the display face is set anywhere
+   else on the site. */
+.prose .chm-expertise h2 {
+  font-family: var(--font-display);
+  font-weight: 500; text-transform: none; letter-spacing: -0.02em;
+}
+.prose .chm-expertise-title {
+  font-family: var(--font-display);
+  font-weight: 500; font-size: 1.25rem; letter-spacing: -0.01em;
+}
+.prose .chm-expertise-card { border-width: 1px; border-radius: 0.75rem; }
+
+/* The plugin share bar sits directly under the title on every post. */
+.prose .meks_ess { margin-bottom: 1.5rem; }
+
+/* Gutenberg blocks the measure would otherwise crop. */
+.prose .wp-block-columns { gap: 1.5rem; }
+.prose .wp-block-embed__wrapper { position: relative; }
+.prose .wp-block-embed iframe { width: 100%; aspect-ratio: 16 / 9; height: auto; border-radius: var(--radius); }
+.prose .wp-block-image img { border-radius: var(--radius); }
+.prose figure { margin-inline: 0; }
