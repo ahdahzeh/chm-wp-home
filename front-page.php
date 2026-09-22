@@ -17,7 +17,7 @@ get_header();
 $chm_works   = chm_hero_works( 12 );
 $chm_areas   = chm_disease_areas();
 $chm_moments = chm_moments( 4 );
-$chm_people  = chm_people();
+$chm_people  = chm_people_featured( 4 );
 $chm_shows   = chm_shows();
 $chm_img     = get_template_directory_uri() . '/assets/img/';
 

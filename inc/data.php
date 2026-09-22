@@ -196,6 +196,16 @@ function chm_people() {
 }
 
 /**
+ * The four the homepage shows.
+ *
+ * Five left a ragged second row; four sits square across one row, and
+ * See all profiles carries the rest of the network.
+ */
+function chm_people_featured( $count = 4 ) {
+	return array_slice( chm_people(), 0, $count );
+}
+
+/**
  * Twenty-eight bar heights for a show's waveform.
  *
  * Seeded from the slug rather than randomised, so a show looks the

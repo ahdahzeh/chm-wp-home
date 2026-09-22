@@ -502,10 +502,14 @@
 
 /* ── in conversation ───────────────────────────────────────────── */
 
+/* Four across one row on desktop, two-up on a phone. auto-fit would
+   reflow them to three-and-one at some widths, which is the ragged
+   row the four-card count exists to avoid. */
 .people {
   display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+@media (min-width: 48rem) { .people { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
 /* Full-bleed portrait with the name laid over the top, which is the
    client's treatment, it reads as a row of faces rather than a row of
