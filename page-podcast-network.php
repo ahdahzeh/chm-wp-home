@@ -59,29 +59,36 @@ $chm_platforms = chm_podcast_platforms();
 			<h2 id="shows-heading"><?php esc_html_e( 'Shows', 'chm' ); ?></h2>
 		</div>
 
-		<ul class="shows">
+		<?php /* The devapp arrangement: the cover leads, the copy sits
+		         beside it. Each card takes the show's own colour, which is
+		         what tells the four apart at a glance. */ ?>
+		<ul class="netshows">
 			<?php foreach ( $chm_shows as $chm_show ) :
 				$chm_lang   = $chm_show['lang'] ? ' lang="' . esc_attr( $chm_show['lang'] ) . '"' : '';
 				$chm_series = home_url( '/podcast-network/' . $chm_show['slug'] );
 				$chm_listen = $chm_show['listen'][0];
 				?>
-				<li><div class="show show--static" style="--show:<?php echo esc_attr( $chm_show['ground'] ); ?>">
-					<span class="eyebrow"><?php echo esc_html( $chm_show['category'] ); ?></span>
-					<h3><a class="show__title" href="<?php echo esc_url( $chm_series ); ?>"><?php echo esc_html( $chm_show['label'] ); ?></a></h3>
-					<p class="show__tagline"<?php echo $chm_lang; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?>><?php echo esc_html( $chm_show['tagline'] ); ?></p>
+				<li><article class="netshow" style="--sh:<?php echo esc_attr( $chm_show['hue'] ); ?>;--sh-ink:<?php echo esc_attr( $chm_show['ink'] ); ?>">
+					<a class="netshow__art" href="<?php echo esc_url( $chm_series ); ?>" tabindex="-1" aria-hidden="true">
+						<img src="<?php echo esc_url( get_template_directory_uri() . '/assets/img/' . $chm_show['cover'] ); ?>"
+							alt="" width="1200" height="1200" loading="lazy" decoding="async">
+					</a>
 
-					<span class="wave" aria-hidden="true"><?php foreach ( chm_wave_bars( $chm_show['slug'] ) as $chm_bar ) : ?><span style="height:<?php echo esc_attr( $chm_bar['height'] ); ?>%;animation-delay:<?php echo esc_attr( $chm_bar['delay'] ); ?>s"></span><?php endforeach; ?></span>
+					<div class="netshow__body">
+						<p class="eyebrow netshow__cat"><?php echo esc_html( $chm_show['category'] ); ?></p>
+						<h3><a href="<?php echo esc_url( $chm_series ); ?>"><?php echo esc_html( $chm_show['label'] ); ?></a></h3>
+						<p class="netshow__tagline"<?php echo $chm_lang; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?>><?php echo esc_html( $chm_show['tagline'] ); ?></p>
+						<p class="netshow__update"<?php echo $chm_lang; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?>><?php echo esc_html( $chm_show['update'] ); ?></p>
 
-					<span class="show__foot">
-						<a class="show__cta" href="<?php echo esc_url( $chm_series ); ?>"><?php esc_html_e( 'View series', 'chm' ); ?> <?php chm_arrow(); ?></a>
-						<?php /* Opens the show's own hub, off-site, so it is marked as such. */ ?>
-						<a class="show__listen" href="<?php echo esc_url( $chm_listen[1] ); ?>" target="_blank" rel="noopener noreferrer">
-							<?php esc_html_e( 'Listen', 'chm' ); ?>
-							<span class="sr-only"><?php esc_html_e( '(opens in a new tab)', 'chm' ); ?></span>
-						</a>
-						<span class="eyebrow"<?php echo $chm_lang; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?>><?php echo esc_html( $chm_show['update'] ); ?></span>
-					</span>
-				</div></li>
+						<div class="netshow__actions">
+							<a class="netshow__cta" href="<?php echo esc_url( $chm_series ); ?>"><?php esc_html_e( 'View series', 'chm' ); ?> <?php chm_arrow(); ?></a>
+							<a class="netshow__listen" href="<?php echo esc_url( $chm_listen[1] ); ?>" target="_blank" rel="noopener noreferrer">
+								<?php esc_html_e( 'Listen', 'chm' ); ?>
+								<span class="sr-only"><?php esc_html_e( '(opens in a new tab)', 'chm' ); ?></span>
+							</a>
+						</div>
+					</div>
+				</article></li>
 			<?php endforeach; ?>
 		</ul>
 	</section>

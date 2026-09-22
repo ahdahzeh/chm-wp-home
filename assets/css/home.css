@@ -453,30 +453,18 @@
 .moments { display: grid; gap: 1.35rem; grid-template-columns: 1fr; }
 @media (min-width: 62rem) { .moments { grid-template-columns: 1fr 1fr; } }
 
-/* A raised white card, as before. The flat grey version made four
-   cards read as one block; the lift is what separates them.
-
-   Colour does the differentiating: each card takes the hue of the
-   disease state it is filed under, the same hue that area owns in the
-   cluster grid and on its archive. It is information, not trim, which
-   is why it sits on the index numeral and the duration rather than in
-   a stripe down the side. A post with no area falls back to neutral. */
+/* The same light ground as the disease cards, not a white card on a
+   white page: the two sections sit next to each other, and a shadowed
+   white card beside a flat grey one reads as two design systems. */
 .moment {
-  --moment-hue: var(--foreground);
-  --moment-ink: var(--muted-foreground);
   position: relative; overflow: hidden;
   display: grid; align-items: center; gap: 1.35rem;
   grid-template-columns: auto minmax(0, 1fr);
   padding: 1.5rem;
-  border-radius: var(--radius-card); background: hsl(var(--card));
-  box-shadow: var(--s-card);
-  transition: transform var(--dur-transform) var(--ease-out-soft),
-              box-shadow var(--dur-transform) var(--ease-out-soft);
+  border-radius: 0.625rem; background: hsl(var(--muted) / .55);
+  transition: background-color 180ms ease;
 }
-.moment:hover { transform: translateY(-2px); box-shadow: var(--s-card-hover); }
-@media (prefers-reduced-motion: reduce) {
-  .moment:hover { transform: none; }
-}
+.moment:hover { background: hsl(var(--muted) / .9); }
 .moment img {
   width: 10rem; aspect-ratio: 16 / 9; object-fit: cover;
   border-radius: 8px; background: hsl(var(--muted));
@@ -493,13 +481,13 @@
   position: absolute; inset-block-start: 50%; inset-inline-end: -0.6rem;
   transform: translateY(-50%);
   font-family: var(--font-display); font-size: 5.25rem; font-weight: 600;
-  line-height: 1; color: hsl(var(--moment-hue) / .3);
+  line-height: 1; color: hsl(var(--foreground) / .055);
   pointer-events: none; user-select: none;
 }
 .moment__dur {
   display: inline-block; padding: 0.2rem 0.6rem; border-radius: 6px;
-  background: hsl(var(--moment-hue) / .18); font-family: var(--font-mono);
-  font-size: var(--t-meta); color: hsl(var(--moment-ink));
+  background: #fff; font-family: var(--font-mono);
+  font-size: var(--t-meta); color: hsl(var(--muted2));
   font-variant-numeric: tabular-nums;
 }
 /* Two lines, then an ellipsis. Session titles run long enough that an
@@ -1041,4 +1029,83 @@
       translateX(calc(var(--step) * 2.3rem))
       rotate(calc(var(--step) * 4deg));
   }
+}
+
+/* ── podcast network: the show cards ───────────────────────────────
+   The devapp arrangement, reskinned: cover on the left, copy beside
+   it. Each card carries the show's own colour on the category line,
+   the cover's frame and the primary action, so four cards that share
+   a layout still read as four different shows.
+
+   The card is a light ground rather than the deep one the homepage
+   row uses, because here the covers supply the colour and a dark card
+   would fight them.
+   ───────────────────────────────────────────────────────────────── */
+
+.netshows {
+  display: grid; gap: 1.35rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 58rem) { .netshows { grid-template-columns: 1fr 1fr; } }
+
+.netshow {
+  display: grid; gap: 1.4rem; align-items: start;
+  grid-template-columns: auto minmax(0, 1fr);
+  height: 100%; padding: 1.5rem;
+  border-radius: 0.75rem;
+  background: hsl(var(--muted) / .5);
+  /* A whisper of the show's colour over the neutral ground: enough to
+     separate the four, not enough to turn the row into a paint chart. */
+  box-shadow: inset 0 0 0 1px hsl(var(--sh) / .34);
+  transition: box-shadow var(--dur-transform) var(--ease-out-soft);
+}
+.netshow:hover { box-shadow: inset 0 0 0 1px hsl(var(--sh) / .7); }
+
+.netshow__art {
+  display: block; width: clamp(5.5rem, 11vw, 7.5rem); aspect-ratio: 1;
+  border-radius: 0.625rem; overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 2px hsl(208 28% 18% / .08), 0 10px 22px -12px hsl(var(--sh-ink) / .5);
+}
+.netshow__art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.netshow__cat { color: hsl(var(--sh-ink)); }
+.netshow__body h3 {
+  margin-top: 0.4rem;
+  font-family: var(--font-display); font-size: 1.25rem; font-weight: 500;
+  letter-spacing: -0.015em;
+}
+.netshow__body h3 a { color: inherit; }
+.netshow__body h3 a:hover { color: hsl(var(--sh-ink)); }
+
+.netshow__tagline {
+  margin-top: 0.6rem;
+  color: hsl(var(--muted2)); font-size: var(--t-body-s); line-height: 1.55;
+}
+.netshow__update {
+  margin-top: 0.85rem;
+  font-family: var(--font-mono); font-size: var(--t-meta);
+  color: hsl(var(--faint));
+}
+
+.netshow__actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.25rem; }
+.netshow__cta {
+  display: inline-flex; align-items: center; gap: 0.45em;
+  height: 36px; padding-inline: 0.95rem; border-radius: 6px;
+  background: hsl(var(--sh-ink)); color: #fff;
+  font-size: var(--t-body-s);
+  transition: filter var(--dur-hover) var(--ease-out-soft);
+}
+.netshow__cta:hover { filter: brightness(1.12); }
+.netshow__listen {
+  display: inline-flex; align-items: center;
+  height: 36px; padding-inline: 0.95rem; border-radius: 6px;
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--muted-foreground)); font-size: var(--t-body-s);
+}
+.netshow__listen:hover { background: hsl(var(--card)); color: hsl(var(--foreground)); }
+
+@media (max-width: 30rem) {
+  .netshow { grid-template-columns: 1fr; }
+  .netshow__art { width: 5rem; }
 }

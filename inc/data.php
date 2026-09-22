@@ -96,8 +96,9 @@ function chm_disease_areas() {
  * carried the same placeholder line on all four, which read as
  * unfinished copy.
  *
- * `ground` is a deep surface carrying white text, not a spectrum hue,
- * which is why these sit far darker than the disease set.
+ * `hue` and `ink` are the show's own colour, used to tell the four
+ * apart on the network page. `ground` is the deep surface the
+ * homepage row still uses.
  *
  * `lang` is set where the show is not in English. TeTalks is in
  * Spanish and its copy stays in Spanish; the attribute is what stops
@@ -110,6 +111,8 @@ function chm_shows() {
 		array(
 			'slug'     => 'breast-friends',
 			'cover'    => 'podcasts/breast-friends.jpg',
+			'hue'      => 'var(--cerebral-pink)',
+			'ink'      => 'var(--ink-pink)',
 			'label'    => 'Breast Friends',
 			'category' => __( 'Clinical · Oncology', 'chm' ),
 			'tagline'  => __( 'Direct, expert-led conversations about breast cancer, built for patients and clinicians. We pair first-line data with what it feels like in the exam room and at home.', 'chm' ),
@@ -121,6 +124,8 @@ function chm_shows() {
 		array(
 			'slug'     => 'cancer-unfiltered',
 			'cover'    => 'podcasts/cancer-unfiltered.jpg',
+			'hue'      => 'var(--cerebral-cyan)',
+			'ink'      => 'var(--ink-cyan)',
 			'label'    => 'Cancer Unfiltered',
 			'category' => __( 'Clinical · Oncology', 'chm' ),
 			'tagline'  => __( 'Candid conversations with leading oncologists on the realities of cancer care, honest perspectives, real-world insights, and what it means for patients and clinicians.', 'chm' ),
@@ -132,6 +137,8 @@ function chm_shows() {
 		array(
 			'slug'     => 'big-c-energy',
 			'cover'    => 'podcasts/big-c-energy.jpg',
+			'hue'      => 'var(--cerebral-amber)',
+			'ink'      => 'var(--ink-amber)',
 			'label'    => 'Big C Energy',
 			'category' => __( 'Patient · Survivorship', 'chm' ),
 			'tagline'  => __( 'Cancer, from the people who lived it. Alison Haislip talks to survivors, caregivers and clinicians about what treatment is actually like once the appointment ends.', 'chm' ),
@@ -143,6 +150,8 @@ function chm_shows() {
 		array(
 			'slug'     => 'tetalks',
 			'cover'    => 'podcasts/tetalks.jpg',
+			'hue'      => 'var(--cerebral-purple)',
+			'ink'      => 'var(--ink-purple)',
 			'label'    => 'TeTalks',
 			'category' => __( 'Clinical · En español', 'chm' ),
 			// Not translated on purpose: the show is in Spanish.

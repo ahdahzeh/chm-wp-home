@@ -244,11 +244,8 @@ $chm_tabs = array(
 
 		<?php if ( $chm_moments ) : ?>
 			<ul class="moments">
-				<?php foreach ( $chm_moments as $chm_i => $chm_post ) :
-					$chm_ma = chm_area_for_post( $chm_post );
-					?>
-					<li><a class="moment" href="<?php echo esc_url( get_permalink( $chm_post ) ); ?>"
-						<?php if ( $chm_ma ) : ?>style="--moment-hue:<?php echo esc_attr( $chm_ma['hue'] ); ?>;--moment-ink:<?php echo esc_attr( $chm_ma['ink'] ); ?>"<?php endif; ?>>
+				<?php foreach ( $chm_moments as $chm_i => $chm_post ) : ?>
+					<li><a class="moment" href="<?php echo esc_url( get_permalink( $chm_post ) ); ?>">
 						<?php if ( has_post_thumbnail( $chm_post ) ) : ?>
 							<?php echo get_the_post_thumbnail( $chm_post, 'chm-hero-work', array( 'alt' => '', 'loading' => 'lazy' ) ); ?>
 						<?php endif; ?>
